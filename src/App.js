@@ -101,7 +101,7 @@ function App() {
       .then( json => {
         userSetter( json.users );
       })
-  }
+  } 
   return (
     <div className="App">
      <UserList users={users} handleEdit={handleEdit} handleDelete={handleDelete}/>
