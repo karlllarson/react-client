@@ -12,12 +12,9 @@ function App() {
   const nameRef = useRef();
   const addressRef = useRef();
   const countryRef = useRef();
-
   useEffect(() => {
-    handleQuery();    // only perform on the first render  
+    handleQuery();
   }, []);
-
-
   const handleEdit = (id) => {
     console.log(`handleEdit(${id})`)
     let user = users.find( user => user.id === id)
@@ -95,15 +92,28 @@ function App() {
       method: "GET"
     }
     console.log('handleQuery called') 
-    let url = `http://localhost:5000/users`;        //localhost:5000/users/ [GET]
-    fetch( url, parameters)
-      .then( res => res.json())
-      .then( json => {
-        userSetter( json.users );
-      })
+    let id = idQRef.current.value
+    console.log("ID=",id);
+    if (id) {
+      let url = `http://localhost:5000/users/${id}`;  //localhost:5000/users/:id [GET]
+      fetch( url, parameters)
+        .then( res => res.json())
+        .then( json => {
+          userSetter( [ json.user ] );
+        })
+    }
+    else {
+      let url = `http://localhost:5000/users`;        //localhost:5000/users/ [GET]
+      fetch( url, parameters)
+        .then( res => res.json())
+        .then( json => {
+          userSetter( json.users );
+        })
+    }
   }
   return (
     <div className="App">
+     <UserQuery handleQuery={handleQuery} idQRef={idQRef} />
      <UserList users={users} handleEdit={handleEdit} handleDelete={handleDelete}/>
      <UserForm handleInsert={handleInsert} handleUpdate={handleUpdate} idRef={idRef} nameRef={nameRef}  addressRef={addressRef}  countryRef={countryRef}/>
     </div>
